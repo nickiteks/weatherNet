@@ -43,7 +43,7 @@ def loss(pred, true):
     return sq.mean()
 
 
-for e in range(1000):
+for e in range(100):
     optimiser.zero_grad()
 
     y_pred = model.forward(x_train)
