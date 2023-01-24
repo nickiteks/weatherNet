@@ -9,21 +9,21 @@ from torch.autograd import Variable
 data = pd.read_csv('data.csv', delimiter='\t', index_col='time', parse_dates=True)
 
 x_train = data[:10000:]
-y_train1 = data[1:10001:]
+y_train = data[1:10001:]
 
 print(data.head(5))
 
 print("x", x_train)
-print(y_train1)
+print(y_train)
 
 mm = MinMaxScaler()
 ss = StandardScaler()
 
 x_train = ss.fit_transform(x_train)
-y_train1 = mm.fit_transform(y_train1)
+y_train = mm.fit_transform(y_train)
 
 x_train = Variable(torch.Tensor(x_train))
-y_train1 = Variable(torch.Tensor(y_train1))
+y_train = Variable(torch.Tensor(y_train))
 
 x_train = torch.reshape(x_train, (x_train.shape[0], 1, x_train.shape[1]))
 
@@ -76,10 +76,21 @@ for epoch in range(num_epochs):
     optimizer.zero_grad()  # caluclate the gradient, manually setting to 0
 
     # obtain the loss function
-    loss = criterion(outputs, y_train1)
+    loss = criterion(outputs, y_train)
 
     loss.backward()  # calculates the loss of the loss function
 
     optimizer.step()  # improve from loss, i.e backprop
     if epoch % 100 == 0:
         print("Epoch: %d, loss: %1.5f" % (epoch, loss.item()))
+
+x = data[10000:10001:]
+print(x)
+x = Variable(torch.Tensor(ss.fit_transform(x)))
+x = torch.reshape(x, (x.shape[0], 1, x.shape[1]))
+
+print(x)
+
+pred = lstm1.forward(x)
+
+print(mm.inverse_transform(pred.data.numpy()))
