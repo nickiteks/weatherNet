@@ -9,8 +9,8 @@ from torchvision.transforms import transforms
 
 data = pd.read_csv('data.csv', delimiter='\t')
 
-x_train = data[:50000:].drop('time', axis=1)
-y_train = data[1:50001].drop('time', axis=1)
+x_train = data[:100000:].drop('time', axis=1)
+y_train = data[1:1000001].drop('time', axis=1)
 x_train = torch.FloatTensor(x_train.values)
 y_train = torch.FloatTensor(y_train.values)
 
@@ -33,9 +33,9 @@ model = myLSTM()
 criterion = nn.MSELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
 
-for e in range(10000):
+for e in range(100000):
     optimizer.zero_grad()
-    train = x_train[e].unsqueeze(-1)
+    train = x_train[e]
 
     output = model(train)
     loss = criterion(output, y_train[e])
